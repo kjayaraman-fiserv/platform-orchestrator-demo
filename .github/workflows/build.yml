@@ -1,0 +1,22 @@
+name: Build and Deploy App
+on:
+  push:
+    branches:
+      - score-test
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout App Code
+        uses: actions/checkout@v3
+
+      - name: Install Score CLI
+        run: |
+          curl -L https://score.dev/install.sh | bash
+          echo "$HOME/.score/bin" >> $GITHUB_PATH
+
+      - name: Validate Score Yaml
+        run: score validate -f score.yaml
