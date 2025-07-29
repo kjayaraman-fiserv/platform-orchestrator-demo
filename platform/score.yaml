@@ -5,9 +5,6 @@ metadata:
 containers:
   web:
     image: nginx:latest
-    ports:
-      - port: 8080
-        targetPort: 8080
     variables:
       APP_URL: http://${resources.app.host}:${resources.app.port}
   app:
