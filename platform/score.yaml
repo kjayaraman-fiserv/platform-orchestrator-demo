@@ -22,12 +22,10 @@ containers:
     variables:
       PG_CONNECTION_STRING: "postgresql://${resources.db.username}:${resources.db.password}@${resources.db.host}:${resources.db.port}/${resources.db.database}?sslmode=disable"
     resources:
-      database:
+      db:
         type: postgres
 
 resources:
-  db:
-    type: postgres
   dns:
     type: dns
   route:
