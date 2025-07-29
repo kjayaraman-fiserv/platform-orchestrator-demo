@@ -26,3 +26,8 @@ jobs:
           score-k8s --version
           score-k8s init
           score-k8s generate platform/score.yaml
+          cat manifests.yaml
+
+      - name: Deploy manifests
+        run: |
+          echo Not Implemented
