@@ -1,0 +1,29 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: three-tier-app
+
+containers:
+  web:
+    image: nginx:latest
+
+  app:
+    image: node:18
+    variables:
+      PG_CONNECTION_STRING: "postgresql://${resources.db.username}:${resources.db.password}@${resources.db.host}:${resources.db.port}/${resources.db.database}?sslmode=disable"
+
+service:
+  ports:
+    web:
+      port: 8080
+
+resources:
+  db:
+    type: postgres
+  dns:
+    type: dns
+  route:
+    type: route
+    params:
+      host: ${resources.dns.host}
+      path: /
+      port: 8080

@@ -1,0 +1,41 @@
+name: Build and Deploy App
+on:
+  push:
+    branches:
+      - score-test
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, staging, production]
+    env:
+      CONTEXT: ${{ matrix.environment }}
+      
+    steps:
+      - name: Checkout App Code
+        uses: actions/checkout@v3
+
+      - name: Install Score CLI
+        uses: score-spec/setup-score@v1
+
+      
+      - name: Validate Score Yaml
+        run: |
+          score validate -f score.yaml
+     
+      - name: Clone Platform Repository
+        run: |
+            git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/platform-resources.git
+      
+      - name: Deploy using score-k8s to ${{ matrix.environment }}
+        run: |
+          score run --provider score-k8s \
+            --context dev \
+            --file score.yaml \
+            --resource-mapping ./platform-resources/resource-mapping.yaml \
+            --modules-path ./platform-resources
+
