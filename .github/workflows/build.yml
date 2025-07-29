@@ -9,6 +9,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, staging, production]
+    env:
+      CONTEXT: ${{ matrix.environment }}
+      
     steps:
       - name: Checkout App Code
         uses: actions/checkout@v3
@@ -20,14 +26,20 @@ jobs:
           version: '0.6.1'
           token: ${{ secrets.GITHUB_TOKEN }}
       
-
-      - name: Generate Manifests
+      - name: Validate Score Yaml
         run: |
           score-k8s --version
           score-k8s init
-          score-k8s generate platform/score.yaml
-          cat manifests.yaml
+          score-k8s validate platform/score.yaml
 
-      - name: Deploy manifests
+      - name: Clone Platform Repository
         run: |
-          echo Not Implemented
+            git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/platform-resources.git
+      - name: Deploy using score-k8s to ${{ matrix.environment }}
+        run: |
+          score-k8s apply \
+            --file score.yaml \
+            --context ${{ matrix.environment }} \
+            --resource-mapping platform-resources/resource-mapping-multi-env.yaml \
+            --modules-path platform-resources/
+
