@@ -6,7 +6,8 @@ containers:
   web:
     image: nginx:latest
     variables:
-      APP_URL: http://${resources.app.host}:${resources.app.port}
+      APP_URL: http://${APP_HOST}:${APP_PORT}
+
   app:
     image: node:18
     variables:
@@ -16,7 +17,6 @@ service:
   ports:
     web:
       port: 8080
-      
 
 resources:
   db:
