@@ -9,9 +9,6 @@ containers:
       APP_URL: http://${resources.app.host}:${resources.app.port}
   app:
     image: node:18
-    ports:
-      - port: 3000
-        targetPort: 3000
     variables:
       PG_CONNECTION_STRING: "postgresql://${resources.db.username}:${resources.db.password}@${resources.db.host}:${resources.db.port}/${resources.db.database}?sslmode=disable"
 
