@@ -17,11 +17,12 @@ jobs:
         uses: score-spec/setup-score@v2
         with:
           file: score-k8s
-          version: '0.13.0'
+          version: '0.6.1'
           token: ${{ secrets.GITHUB_TOKEN }}
       
 
       - name: Validate Score Yaml
         run: |
           score-k8s --version
-          score validate -f score.yaml
+          score-k8s init
+          score-k8s generate score.yaml
