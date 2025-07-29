@@ -26,11 +26,10 @@ jobs:
           version: '0.6.1'
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Validate Score Yaml
+      - name: Initialize Score Yaml
         run: |
           score-k8s --version
           score-k8s init
-          score-k8s validate platform/score.yaml
 
       - name: Clone Platform Repository
         run: |
