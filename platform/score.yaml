@@ -1,0 +1,33 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: three-tier-app
+
+containers:
+  web:
+    image: nginx:latest
+    ports:
+      - port: 80
+        targetPort: 80
+    variables:
+      APP_URL: http://${resources.app.host}:${resources.app.port}
+    resources:
+      app:
+        type: service
+
+  app:
+    image: node:18
+    ports:
+      - port: 3000
+        targetPort: 3000
+    variables:
+      DB_HOST: ${resources.database.host}
+      DB_PORT: ${resources.database.port}
+      DB_USER: ${resources.database.username}
+      DB_PASS: ${resources.database.password}
+    resources:
+      database:
+        type: postgres
+
+resources:
+  database:
+    type: postgres
