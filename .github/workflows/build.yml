@@ -20,25 +20,22 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Score CLI
-        uses: score-spec/setup-score@v2
-        with:
-          file: score-k8s
-          version: '0.6.1'
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Initialize Score Yaml
-        run: |
-          score-k8s --version
-          score-k8s init
+        uses: score-spec/setup-score@v1
 
+      
+      - name: Validate Score Yaml
+        run: |
+          score validate -f score.yaml
+     
       - name: Clone Platform Repository
         run: |
             git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/platform-resources.git
+      
       - name: Deploy using score-k8s to ${{ matrix.environment }}
         run: |
-          score-k8s apply \
+          score run --provider score-k8s \
+            --context dev \
             --file score.yaml \
-            --context ${{ matrix.environment }} \
-            --resource-mapping platform-resources/resource-mapping-multi-env.yaml \
-            --modules-path platform-resources/
+            --resource-mapping ./platform-resources/resource-mapping.yaml \
+            --modules-path ./platform-resources
 
