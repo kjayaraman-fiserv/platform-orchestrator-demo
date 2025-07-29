@@ -20,14 +20,19 @@ containers:
       - port: 3000
         targetPort: 3000
     variables:
-      DB_HOST: ${resources.database.host}
-      DB_PORT: ${resources.database.port}
-      DB_USER: ${resources.database.username}
-      DB_PASS: ${resources.database.password}
+      PG_CONNECTION_STRING: "postgresql://${resources.db.username}:${resources.db.password}@${resources.db.host}:${resources.db.port}/${resources.db.database}?sslmode=disable"
     resources:
       database:
         type: postgres
 
 resources:
-  database:
+  db:
     type: postgres
+  dns:
+    type: dns
+  route:
+    type: route
+    params:
+      host: ${resources.dns.host}
+      path: /
+      port: 80
