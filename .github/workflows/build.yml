@@ -21,8 +21,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
 
-      - name: Validate Score Yaml
+      - name: Generate Manifests
         run: |
           score-k8s --version
           score-k8s init
-          score-k8s generate score.yaml
+          score-k8s generate platform/score.yaml
